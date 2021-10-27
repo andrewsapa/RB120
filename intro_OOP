@@ -1,0 +1,1636 @@
+###### Object Oriented Programming #####
+
+## Why Ojbect Oriented Programming? ##
+
+OOP - was created to deal with the  growing complexity of large software
+      systems. A way to organize your code with 'containers' for data that
+      could be changed and manipulated without affecting the entire program.
+      
+
+Encapsulation - is hiding a piece of functionality and making it unavailable
+                to the rest of the code base. It is a form of data protection
+                Creating objects is a form of encapsulation in Ruby.
+                
+
+Polymorphism - the ability of different types of data to respond to a common
+               interface. It lets objects of different types respond to the same
+               method invocation. Modules in Ruby help to form a polymorphic 
+               structure.
+
+
+Inheritance - is used in Ruby where a class inherits the behaviors of another class,
+              referred to as the superclass. This gives Ruby programmers the power
+              to define basic classes with large reusability and smaller subclasses
+              for more fine-grained, detailed behaviors.
+
+Modules - are similar to classess in that they contain shared behavior. They help
+          to apply a polymorhpic structure to your code. 
+          
+Mixin - when a modcule is mixed in with a class using the include method invocation.
+        A mixin helps make available the behaviors declared in that module to the class 
+        and its objects.
+        
+
+## What Are Objects? ##
+
+Not everything in Ruby is an object. Anything that can be said to have a value
+is an object (e.g. numbers, strings, arrays, and even classes and modules). Examples
+of not objects: methods, blocks, and variables.
+
+              
+Ojbects are created from classes. Classes define objects. 
+
+
+A class is like a mold and an object is what you produce out of those molds.
+
+e.g "hello".class  (#class instance method)
+    => String
+    "world.class
+    => String
+
+
+Classes - are basic outlines of what an object should be made of and what it
+          should be able to do. 
+          
+
+e.g. class GoodDog
+     end
+     
+     sparky = GoodDog.new
+     
+     Spark is an object or instance of class GoodDog. This is called instantiation.
+     An object is returned by calling the class method `#new`.
+     
+     
+Module - is a collection of behaviors that is usable in other classess via mixins.
+         A module is "mixed in" to a class using the `#include` method invocation.
+         
+e.g.  module Speak
+        def speak(sound)
+          puts sound
+        end
+      end
+      
+      class GoodDog
+        include Speak
+      end
+      
+      class HumanBeing
+        include Speak
+      end
+      
+      sparky = GoodDog.new
+      sparky.speak("Arf!")     #=> Arf!
+      bob = HumanBeing.new
+      bob.speak("Hello!")      #=> Hello!
+      
+      
+# Method Lookup
+
+# You can use the `#ancestors` method on any class to find out the method 
+# lookup chain. 
+
+module Speak
+  def speak(sound)
+    puts "#{sound}"
+  end
+end
+
+class GoodDog
+  include Speak
+end
+
+class HumanBeing
+  include Speak
+end
+
+puts "---GoodDog ancestors---"
+puts GoodDog.ancestors
+puts ''
+puts "---HumanBeing ancestors---"
+puts HumanBeing.ancestors
+
+
+# output: 
+---GoodDog ancestors---
+GoodDog
+Speak
+Object
+Kernel
+BasicObject
+
+---HumanBeing ancestors---
+HumanBeing
+Speak
+Object
+Kernel
+BasicObject
+
+
+1.) How do we create an object in Ruby? Give an example of the creation of an
+object.
+
+An object is created or instantiated by creating a class and then
+calling `#new` on the class. This creates an object or an instance. For example:
+
+class HumanBeing
+end
+
+HumanBeing.new => #<HumanBeing:0x0000559d361b20f0>
+
+
+2.) What is a module? What is its purpose? How do we use them with our classes?
+Create a module for the class you created in exercise 1 and include it properly.
+
+A module is similar to a class that can take method definitions where one can puts
+reusable code. A module is a form of polymorphism in that you can mixin the module into multiple classes
+in order to have acces to the same method definition. You do this by using the 
+`#include` method invocation.
+
+module Speakable
+  def speak
+    puts "I can talk!"
+  end
+end
+
+class HumanBeing
+  include Speakable
+end
+
+jack = HumanBeing.new
+
+jack.speak => "I can talk!"
+
+#-------------------------------------------------------------------------------
+
+
+## States and Behaviors ##
+
+States track attributes for individual objects.
+Behaviors are what objects are capable of doing.
+
+Instance variables (@instance) are used to keep track of states
+for objects. 
+
+For example:
+
+class GoodDog
+
+  attr_reader :name, :age, :weight
+  
+  def initialize(name, age, weight)
+    @name = name
+    @age = age
+    @weight = weight
+  end
+  
+  def run
+    puts "running!"
+  end
+  
+  def bark
+    puts "barking!"
+  end
+  
+  def fetch
+    puts "fetching!"
+  end
+end
+
+sparky = GoodDog.new('Sparky', 4, 25)
+
+buck = GoodDog.new('Buck', 15, 45)
+
+Name, name age and weight are examples of states. 
+
+Run, bark, and fetch are instance methods that define identical behaviors for 
+both the sparky and buck objects.
+
+
+## Initialize ##
+
+The `#initialize` method is called a constructor method. `#initialize` gets called
+every time you create a new object. calling `#new` on class also creates an 
+object but evetually leads to the intialize `#instance` method.
+
+
+example:
+
+class GoodDog
+  def initialize
+    puts 'This object was initialized!'
+  end
+end
+
+sparky = GoodDog.new #=> "This object was initialized!"
+
+`#initialize` gets triggered when the `sparky` object is instantiated.
+
+Every object's state is unique and instance variables are how we keep track of 
+them. 
+
+
+## Instance Methods ##
+
+Instance methods provide behaviors for objects.
+
+example: 
+
+class GoodDog  #class name
+  def initialize # constructor method
+    @name = name # instance variable, keeps track of states like (@name = "Sparky")
+  end
+  
+  def speak #instance method, provides behaviors for objects of class to use
+    "Arf!"
+  end
+end
+
+sparky = GoodDog.new("Sparky")
+puts sparky.speak #=> "Arf!"
+
+fido = GoodDog.new("Fido")
+puts fido.speak #=> "Arf!"
+
+`fido` and `sparky` are objects of the GoodDog class that have differents states
+with name but use the same instance behavior of `#speak`.
+
+
+
+### Accessor Methods ###
+
+Accessor methods can be used to access instance variables.
+
+
+## Getter methods ##
+For example:
+
+class GoodDog #class name
+  def initialize(name) #constructor method that takes one argument
+    @name = name # instance variable references the string object that is stored in the name variable
+  end
+  
+  def get_name # getter method that retrives the name stored in the @name instance variable
+    @name
+  end
+  
+  def speak # instance method
+    "#{@name} says arf!"
+  end
+end
+
+sparky = GoodDog.new("Sparky")
+puts sparky.speak #=> "Sparky says arf!"
+puts sparky.get_name #=> "Sparky"
+
+`#get_name` is a getter method in the GoodDog class.
+
+
+
+## Setter Methods ##
+
+Setter methods are used for if we want to change the state of an object or the instance
+variable that references information regarding the state of an object.
+
+For example:
+
+class GoodDog #name of class
+  def initialize(name) #constructor method
+    @name = name # instance variable
+  end
+  
+  def get_name #getter method, gets name or state of object
+    @name
+  end
+  
+  def set_name=(name) #setter method, changes name or state of object
+    @name = name
+  end
+  
+  def speak #instance method, behavior available to all objects of the GoodDog class
+    "#{@name} says arf!"
+  end
+end
+
+sparky = GoodDog.new('Sparky!')
+puts sparky.speak # => "Sparky says arf!"
+puts sparky.get_name #=> "Sparky"
+sparky.set_name = 'Spartacus'  #setter method invoked on the sparky object to change the name or state
+puts sparky.get_name #=> "Spartacus"
+
+
+## attr_accessor ##
+
+attr_accessor is par of Ruby's 'syntatical sugar' fo automatically creating 
+setter and getter methods into one line: attr_accessor
+
+example:
+
+class GoodDog
+  attr_accessor :name #this line takes care of the getter and setter methods for state name
+  
+  def initialize(name) #constructor method but also an example of an instance method
+    @name = name #instance variable
+  end
+  
+  def speak # instance method for behavior of objects create from GoodDog class
+    "#{@name} says arf!"
+  end
+end
+
+sparky = GoodDog.new('Sparky')
+puts sparky.speak
+puts sparky.name #=> "Sparky"
+sparky.name = "Spartacus"
+puts sparky.name #=> "Spartacus"
+
+
+## attr_reader ##
+
+attr_reader method replaces the getter method only
+
+
+## attr_writer ##
+
+attr_writer method replaces the setter method only
+
+
+more examples:
+
+def speak
+  "#{@name} says arf!"
+end
+
+`@name` in the speak method is referencing the instance variable. 
+
+def speak
+  "#{name} says arf!"
+end
+
+`name` in the speak method is referencing the getter method for the `@name` instance variable.
+
+
+It's usually better to reference the getter method than the instance variable.
+
+
+
+## Calling Methods With `self` ##
+
+Example:
+
+class GoodDog
+  attr_accessor :name, :height, :weight
+
+  def initialize(n, h, w)
+    @name = n
+    @height = h
+    @weight = w
+  end
+
+  def speak
+    "#{name} says arf!"
+  end
+
+  def change_info(n, h, w) # using self here helps call the setter methods
+    self.name = n
+    self.height = h
+    self.weight = w
+  end
+
+  def info
+    "#{name} weighs #{weight} and is #{height} tall."
+  end
+end
+
+
+sparky = GoodDog.new('Sparky', '12 inches', '10 lbs')
+puts sparky.info      # => Sparky weighs 10 lbs and is 12 inches tall.
+
+sparky.change_info('Spartacus', '24 inches', '45 lbs')
+puts sparky.info      # => Spartacus weighs 45 lbs and is 24 inches tall.
+
+
+Using `self. etc...` helps in the `#change_info` method helps call the 
+`name=`, `weight=`, `height=` setter mtehods. Without `self` Ruby thinks we're 
+creating 3 new local variables named `name`, `height`, and `weight`. 
+
+
+`self` can also be used with instance methods, not just a setter or getter method.
+
+
+
+
+## Exercises:
+
+1.) Create a class called MyCar. When you initialize a new instance or object 
+of the class, allow the user to define some instance variables that tell us the 
+year, color, and model of the car. Create an instance variable that is set to 0 
+during instantiation of the object to track the current speed of the car as well. 
+Create instance methods that allow the car to speed up, brake, and shut the car off.
+
+
+# answer:
+
+class MyCar
+  def initialize(year, color, model)
+    @year = year
+    @color = color
+    @model = model
+    @current_speed = 0
+  end
+  
+  def speed_up(mph)
+    @current_speed += mph
+    puts "You have accelerated to #{@current_speed} mph."
+  end
+  
+  def brake(mph)
+    @current_speed -= mph
+    puts "You have decelerated to #{@current_speed} mph."
+  end
+  
+  def shut_off
+    @current_speed = 0
+    puts "You have shut off the car."
+  end
+end
+
+mycar = MyCar.new(1999, 'red', 'forester')
+
+mycar.speed_up(30) #=> "You have accelerated to 30 mph."
+mycar.brake(10) #=> "You have decelerated to 20 mph."
+mycar.shut_off #=> "You have shut off the car."
+  
+  
+
+2.) Add an accessor method to your MyCar class to change and view the color of 
+your car. Then add an accessor method that allows you to view, but not modify, 
+the year of your car.
+
+class MyCar
+  attr_accessor :color #allows view color and change color
+    
+  attr_reader :year #allows view of year only
+  
+  def initialize(year, color, model)
+    @year = year
+    @color = color
+    @model = model
+    @current_speed = 0
+  end
+  
+  def speed_up(mph)
+    @current_speed += mph
+    puts "You have accelerated to #{@current_speed} mph."
+  end
+  
+  def brake(mph)
+    @current_speed -= mph
+    puts "You have decelerated to #{@current_speed} mph."
+  end
+  
+  def shut_off
+    @current_speed = 0
+    puts "You have shut off the car."
+  end
+end
+
+mycar = MyCar.new(1999, 'red', 'forester')
+
+mycar.speed_up(30) #=> "You have accelerated to 30 mph."
+mycar.brake(10) #=> "You have decelerated to 20 mph."
+mycar.shut_off #=> "You have shut off the car."
+
+
+puts mycar.year #=> 1999
+mycar.color = 'blue'
+puts mycar.color #=> 'blue'
+
+
+
+3.) You want to create a nice interface that allows you to accurately describe 
+the action you want your program to perform. Create a method called spray_paint 
+that can be called on an object and will modify the color of the car.
+
+
+class MyCar
+  attr_accessor :color #allows view color and change color
+    
+  attr_reader :year #allows view of year only
+  
+  def initialize(year, color, model)
+    @year = year
+    @color = color
+    @model = model
+    @current_speed = 0
+  end
+  
+  def speed_up(mph)
+    @current_speed += mph
+    puts "You have accelerated to #{@current_speed} mph."
+  end
+  
+  def brake(mph)
+    @current_speed -= mph
+    puts "You have decelerated to #{@current_speed} mph."
+  end
+  
+  def shut_off
+    @current_speed = 0
+    puts "You have shut off the car."
+  end
+  
+  def spray_paint(new_color)
+    self.color = new_color
+  end
+end
+
+mycar = MyCar.new(1999, 'red', 'forester')
+
+mycar.speed_up(30) #=> "You have accelerated to 30 mph."
+mycar.brake(10) #=> "You have decelerated to 20 mph."
+mycar.shut_off #=> "You have shut off the car."
+
+
+puts mycar.year #=> 1999
+mycar.color = 'blue'
+puts mycar.color #=> 'blue'
+puts mycar.spray_paint('black') #=> 'black'
+ 
+ 
+ 
+## Class Method ##
+
+Class methods are methods we can call directly on the class itself without
+having to instantiate any objects. 
+
+In order to make a class method you have to prepend the word `self`.
+
+Example:
+
+class GoodDog
+  def self.what_am_i
+    "I'm a GoodDog class!"
+  end
+end
+
+GoodDog.what_am_i #=> I'm a GoodDog class!
+
+
+Class methods are a good place to put functionality that does not pertain to 
+individual objects. 
+
+
+## Class Variables ##
+
+class variables are for the whole class using @@ prepended to the name
+
+While `#intialize` is considered an example of a constructor method, it also 
+techinically an instance method too. 
+
+
+class GoodDog   #class name
+  @@number_of_dogs = 0    #class variable
+  
+  def initialize    # constructor/instance method
+    @@number_of_dogs += 1   # incrementing class variable, class variables can be accessed within an instance method
+  end
+  
+  def self.total_number_of_dogs
+    @@number_of_dogs
+  end
+  
+  def self.what_am_i
+    "I'm a GoodDog class!"
+  end
+end
+
+p GoodDog.what_am_i #=> I'm a GoodDog class!
+
+dog1 = GoodDog.new
+dog2 = GoodDog.new
+
+puts GoodDog.total_number_of_dogs #=> 2
+
+
+
+## Constants ##
+
+Used when you don't want certain variables to ever change.
+
+While techinically constants only need to start the constant with a capital letter most Rubyists
+wil capitalize the entire word
+
+
+example:
+
+
+class GoodDog    #class name
+  DOG_YEARS = 7    #constant references 7
+  
+  attr_accessor :name, :age    # getter and setter methods
+  
+  def initialize(n, a)    #constructor/instance method takes two arguments
+    self.name = n   #setter method invoked on the GoodDog class to reference n
+    self.age = a * DOG_YEARS    #setter method invoked on the class to reference the return value of `a` * DOG_YEARS
+  end
+end
+
+sparky = GoodDog.new("Sparky", 4)
+puts sparky.age #=> 28
+
+
+
+
+### to_s Method ###
+
+`to_s` is an instance method and comes built into every class in Ruby.
+
+example:
+
+class GoodDog
+end
+
+sparky = GoodDog.new
+puts sparky # => #<GoodDog:0x007fe542323320>
+
+Above, `puts sparky` is the same thing as `puts sparky.to_s`.
+
+to_s is automatically called with puts. to_s returns the name of the object's
+class and encoding of the object id. 
+
+
+# example:
+
+class GoodDog   # class name
+  DOG_YEARS = 7   # constant references 7
+  
+  attr_accessor :name, :age   # creates getter/setter methods with symbols
+  
+  def initialize(n, a)    # constructor/instance method takes 2 arguments
+    @name = n     # instance variables store state of objects
+    @age = a * DOG_YEARS      # instance variables store state objects
+  end
+  
+  def to_s # instance method that overides standard to_s method
+    "This dog's name is #{name} and it is #{age} in dog years."
+  end
+end
+
+sparky = GoodDog.new('Sparky', 4)
+puts sparky  # => This dog's name is Sparky and is 28 in dog years.
+
+
+
+`#to_s` methods is also automaticllay called whenver string interpolation is used
+
+puts "#{sparky}" #=> "This dog's name is Sparky and it is 28 in dog years."
+
+
+
+
+### More About `self` ###
+
+
+1.) `self` can be used when calling setter methods to help Ruby differentiate between
+local variables and setter methods
+
+
+# example:
+
+class GoodDog
+  attr_accessor :name, :height, :weight
+  
+  def initialize(n, h, w)
+    self.name = n
+    self.height = h
+    self.weight = w
+  end
+  
+  def change_info(n, h, w)
+    self.name = n    # same thing as calling sparky.name= from outside the class
+    self.height = h  # same thing as calling sparky.height= from outside the class
+    self.weight = w  # same thing as calling sparky.weight= from outside the class
+  end
+  
+  def info
+    "#{self.name} weighs #{self.weight} and is #{self.height} tall."
+  end
+  
+  def what_is_self
+    self # referencing the calling object
+  end
+end
+
+sparky = GoodDog.new('Sparky', '12 inches', '10 lbs')
+p sparky.what_is_self # => #<GoodDog:0x007f83ac062b38 @name="Sparky", @height="12 inches", @weight="10 lbs">
+
+
+
+2.) `self` can be used for class method definitions.
+
+# example:
+
+class MyAwesomeClass
+  def self.this_is_a_class_method # `self` prepended to method definition to create class method
+  end
+end
+
+
+class GoodDog
+  pust self # GoodDog
+end
+
+
+`self` inside a class but outside of an instance method refers to the 
+class itself.
+
+Thus, def self.a_method is the same thing as GoodDog.a_method.
+
+Review...
+
+  1.) `self` inside of an instance method references the instance or object that
+  called th emthod. e.g. self.weight= is the same as sparky.weight=.
+  
+  2.) `self` outside of an instance method references the class and can
+  be used to define class methods. def self.a_method is the same as def GoodDog.a_method
+  
+  
+
+
+### Exercises ###
+
+1.) Add a class method to your MyCar class that calculates the gas mileage of
+any car. 
+  
+answer:
+
+class MyCar
+  def self.gas_mileage(gas_used, miles_traveled)
+    puts "Your car gets #{miles_traveled / gas_used} mpg."
+  end
+end
+
+mycar1 = MyCar.gas_mileage(5, 200)
+mycar1 #=> Your car gets 40 mpg.
+
+mycar2 = MyCar.gas_mileage(10, 300)
+mycar2 #=> Your car get 30 mpg.
+
+
+2.) Override the to_s method to create a user friendly print out of your object.
+
+class MyCar
+  attr_reader :make, :model, :color, :year
+  
+  def initialize(make, model, color, year)
+    @make = make
+    @model = model
+    @color = color
+    @year = year
+  end
+  
+  def to_s
+    "You have a #{color}, #{year} #{make} #{model}."
+  end
+end
+
+rojo = MyCar.new('Subaru', 'Forester', 'red', 1999)
+
+puts rojo #=> You have a red, 1999 Subaru Forester.
+
+
+
+3.) When running the following code...
+
+class Person
+  attr_reader :name
+  
+  def initialize(name)
+    @name = name
+  end
+end
+
+bob = Person.new("Steve")
+bob.name = "Bob"
+
+We get the following error...
+
+test.rb:9:in `<main>': undefined method `name=' for
+  #<Person:0x007fef41838a28 @name="Steve"> (NoMethodError)
+  
+  
+Why do we get this error and how do we fixt it?
+
+answer:
+The reason why we get this error is because on `line 9` we are trying to call
+the setter method `name` on the object `bob` but the setter method is not
+available because it hasn't been created. `attr_reader` on `line 2` only 
+creates a getter method but not setter method. In order to fix this one could
+change `line 2` from `attr_reader` to `attr_accessor` to create both getter and setter 
+methods or you can add a setter method manually like so:
+
+def name=(name)
+  @name =name
+end
+
+
+
+### Inheritance ###-------------------------------------------------------------
+
+
+Inheritance is when a class inherits behavior from another class. 
+
+Subclass - refers to the class that is inheriting the beahvior
+
+Superclass - refers to the the class where the behavior originates and passes
+down to the subclass through the `<` syntax. 
+
+Inheritance allows a programmer to keep the logic in one place but use the logic
+in multiple classes.
+
+example:
+
+class Animal
+  def speak   #instance method / behavior
+    "Hello!"
+  end
+end
+
+class GoodDog < Animal  #GoodDog class is sub class of Animal and can inheri the speak behavior
+end
+
+class Cat < Animal    #Cat is a subclass and can inherit the speak behavior
+end
+
+sparky = GoodDog.new
+paws = Cat.new
+
+puts sparky.speak #=> Hello!
+puts paws.speak #=> Hello!
+
+
+
+How to use inheritance but override a behavior in a class.
+
+example:
+
+class Animal    #superclass
+  def speak   #instance method or behavior of the Animal Class
+    "Hello!"
+  end
+end
+
+class GoodDog < Animal # inheritance 
+  attr_accessor :name #creates getter and setter method
+
+  def initialize(n)   # instance/constructor method takes one argument
+    self.name = n #state of the object created
+  end
+
+  def speak   # instance method overriding
+    "#{self.name} says arf!"
+  end
+end
+
+class Cat < Animal #subclass of Animal, inherits speak method from Animal superclass
+end
+
+sparky = GoodDog.new("Sparky")
+paws = Cat.new
+
+puts sparky.speak           # => Sparky says arf!
+puts paws.speak             # => Hello!
+
+
+Inheritance is a good way to keep your code DRY (Don't repeat yourself).
+
+
+
+### `super` ###
+
+`super` is used to search the method lookup path for a method with the same name.
+
+
+example:
+
+class Animal  #superclass
+  def speak   # instance method/ beahvior of Animal class
+    "Hello!"
+  end
+end
+
+class GoodDog < Animal    #GoodDog class inherits from Animal class
+  def speak   #speak method overrides speak method in Animal class initially
+    super + " from GoodDog class"   # super keyward is used to search superclass with same speak method name and is found
+  end
+end
+
+sparky = GoodDog.new
+spark.speak #=> "Hello! from GoodDog class"
+
+
+
+example: 
+
+class Animal    # superclass
+  attr_accessor :name   # setups getter and setter methods
+  
+  def initialize(name) # constructor/ instance method
+    @name = name # instance variable
+  end
+end
+
+class GoodDog < Animal  # subclass GoodDog inherits behaviors from Animal superclass
+  def initialize(color) # has same name as method in superclass
+    super # same as @name = name
+    @color = color
+  end
+end
+
+bruno = GoodDog.new("brown") # "brown" is assigned to both @name and @color. 
+p bruno  # => #<GoodDog:0x00005646d3a34fd8 @name="brown", @color="brown">
+
+
+
+
+class Animal    # superclass
+  attr_accessor :name   # setups getter and setter methods
+  
+  def initialize(name) # constructor/ instance method
+    @name = name # instance variable
+  end
+end
+
+class BadDog < Animal
+  def initialize(age, name)
+    super(name) # super takes an argument and is sent to the superclass Animal to be assigned to the @name instance variable
+    @age = age
+  end
+end
+
+BadDog.new(2, 'black') # => #<BadDog:0x000055bbe38ba048 @name="black", @age=2>
+
+
+If you call `super()` with an empty argument it will call the method in the 
+superclass with no arugments at all.
+
+example:
+
+class Animal
+  def initialize    # construcotr method here takes no arguments
+  end
+end
+
+class Bear < Animal
+  def initialize(color)
+    super()   # super used without argument, will raise argument if no empty `()`
+    @color = color
+  end
+end
+
+bear = Bear.new("black")
+p bear #=> #<Bear:0x000055f25cc39638 @color="black">
+
+
+
+### Mixing in Modules ###-------------------------------------------------------
+
+Modules are a good way to DRY(Don't Repeat Yourself) up your code.
+
+example:
+
+module Swimmable
+  def swim
+    "I'm siwmming!"
+  end
+end
+
+class Animal; end
+# Ruby's shorthand for:
+
+# class Animal
+# end
+
+class Fish < Animal
+  include Swimmable   #mixing in module using keyword `include`
+end
+
+class Mammal < Animal
+end
+
+class Cat < Mammal
+end
+
+class Dog < Mammal
+  include Swimmable    # mixing in Swimmable module
+end
+
+sparky = Dog.new
+neemo = Fish.new
+paws = Cat.new
+
+sparky.swim #=> I'm swimming!
+neemo.swim #=> I'm siwmming!
+
+paws.swim #=> NoMethodError: undefined method `swim`
+
+
+
+### Inheritance vs Modules ###--------------------------------------------------
+
+Class inheritance is the traditional way to think of inheritance in Ruby. 
+The other form of inheritance is called interface inheritance where a class
+inherits the behavior through an interface from a mixin module.
+
+Things to think about with inheritance and type:
+
+  1.) you can only inherit beahviors form one class with class inheritance where
+  as with interface inheritance you can mix in as many modules as you want.
+  
+  2.) "is-a" relationship is better with class inheritance(traditional inheritance)
+  "has-a" relationship is better with interface inheritance(use of modules).
+  e.g. a dog "is an" animal and it "has an" ability to swim. 
+  
+  3.) No object can be created from a module but they can be created from
+  a class. Modules are used only for namespacing and grouping common methods together.
+  
+
+
+### Method Lookup Path ###------------------------------------------------------
+
+Current Class
+Module (looks at last module included first)
+Module (etc.. if more modules are included in current class)
+Superclass (if there is one)
+Module (if there is another module in superclass)
+Object
+Kernel
+BasicObject
+
+If multiple modules are included in a class, Ruby looks for the last module that
+was included first. 
+
+
+
+### More Modules ###------------------------------------------------------------
+
+1.) Namespacing in the context of modules means organzing similar classes under a 
+module or use a module to group related classes. 
+
+module Mammal
+  class Dog
+    def speak(sound)
+      p "#{sound}"
+    end
+  end
+
+  class Cat
+    def say_name(name)
+      p "#{name}"
+    end
+  end
+end
+
+You can call a class within a module by using `::`
+
+buddy = Mammal::Dog.new
+kitty = Mammal::Cat.new
+buddy.speak('Arf!') #=> "Arf!"
+kitty.say_name('kitty') #=> "kitty"
+
+
+
+2.) Modules can also be used in a "container" for methods also called 
+module methods. You can put   methods in a module that seem out of place within
+the rest of your code. 
+
+module Mammal
+  def self.some_out_of_place_method(num)
+    num ** 2
+  end
+end
+
+call call methods two different ways using the above module:
+
+value = Mammal.some_out_of_place_method(4)  # the preferred way
+
+or
+
+value = Mammal::some_out_of_place_method(4)
+
+
+
+
+### Private, Protected, and Public ###
+
+Method access control is important to restrict access to methods within
+a class
+
+Access modifies like `private`, `protected`, and `public` can be implemented to 
+to control access to a particular method.
+
+public - is used to make methods available to anyone who know either the class name or the
+object's name.
+
+private - is used to make private any method below that doesn't need to be 
+available to the rest of the program (unless protected is called after it to negate it)
+Private methods are only accesible from other methods in the class.
+
+
+example:
+
+class GoodDog
+  DOG_YEARS = 7
+
+  attr_accessor :name, :age
+
+  def initialize(n, a)
+    self.name = n
+    self.age = a
+  end
+
+  private
+
+  def human_years
+    age * DOG_YEARS
+  end
+end
+
+sparky = GoodDog.new("Sparky", 4)
+sparky.human_years   #=> NoMethodError: private method `human_years' called for
+  #<GoodDog:0x007f8f431441f8 @name="Sparky", @age=4>
+  
+
+
+protected - is an in between approach. 
+  - from inside the class, protected methods are accessible just public methods.
+  - from outside the class, protected methods are act just like private methods.
+  
+
+
+### Accidental Method Overriding ###--------------------------------------------
+
+It's important to remember that every class a programmer creates subclasses from 
+class Object. 
+
+e.g.
+
+class Parent
+  def say_hi
+    p "Hi from Parent."
+  end
+end
+
+Parent.superclass #=> Object
+
+This means that methods defined in the Object class are available to all classes.
+
+
+A subclass can override a superclass method through the magic of inheritance.
+
+e.g. 
+
+class Child < Parent
+  def say_hi
+    p "Hi from Child."
+  end
+end
+
+child = Child.new
+child.say_hi    #=> "Hi from Child."
+
+
+For example the `send` method is a method that all classes have from superclass
+Object. You pass the `send` method a a symbol or string version of the method you
+want to call
+
+e.g.
+
+son = Child.new
+son.send :say_hi  #=> "Hi from Child."
+
+
+You can accidentally ovrride the `send` method by defining your own `send`
+method in a custom class. 
+
+e.g.
+
+class Child
+  def say_hi
+    p "Hi from Child."
+  end
+  
+  def send # custom send metho created here overrides Ruby's built in send method from superclass Object
+    p "send from Child..."
+  end
+end
+
+lad = Child.new
+lad.send :say_hi
+
+
+
+`#instance_of?` method is a method from superclass Object
+The method will return true if an object is an instance of a give class and false otherwise
+
+e.g.
+
+c = Child.new
+c.instance_of?(Child) #=> true
+c.instance_of?(Parent)  #=> false
+
+
+Just like accidentally overriding `#send`, you can override `#instance_of?`
+
+e.g.
+class Child
+  def instance_of?
+    p "I am a fake instance"
+  end
+end
+
+heir = Child.new
+heir.instance_of?(Child)
+
+
+
+### Execises ###----------------------------------------------------------------
+
+1.) Create a superclass called Vehicle for your MyCar class to inherit from and 
+move the behavior that isn't specific to the MyCar class to the superclass. 
+Create a constant in your MyCar class that stores information about the vehicle
+that makes it different from other types of Vehicles.
+
+Then create a new class called MyTruck that inherits from your superclass that 
+also has a constant defined that separates it from the MyCar class in some way.
+
+
+class Vehicle # superclass
+  attr_reader :make, :model, :year, :color
+  
+  def initialize(make, model, year, color)
+    @make = make
+    @model = model
+    @year = year
+    @color = color
+  end
+  
+  def spray_paint=(new_color)
+    @color = new_color
+  end
+  
+  def to_s
+    "You drive a #{year} #{color}, #{make} #{model}."
+  end
+end
+
+class MyCar < Vehicle
+  DOORS = 4
+end
+
+class MyTruck < Vehicle
+  DOORS = 2
+end
+  
+bobs_car = MyCar.new('Subaru', 'Forester', 1999, 'red')
+
+
+dicks_truck = MyTruck.new('Toyota', 'Tacoma', 2016, 'yellow')
+
+bobs_car.spray_paint = 'blue'
+puts dicks_truck #=> You drive a 2016 yellow, Toyota Tacoma.
+
+puts bobs_car #=> You drive a 1999 blue, Subaru Forester.
+
+
+
+2.) Add a class variable to your superclass that can keep track of the number of
+objects created that inherit from the superclass. Create a method to print out 
+the value of this class variable as well.
+
+class Vehicle # superclass
+  attr_reader :make, :model, :year, :color
+  
+  @@vehicles = 0
+  
+  def initialize(make, model, year, color)
+    @make = make
+    @model = model
+    @year = year
+    @color = color
+    @@vehicles += 1
+  end
+  
+  def spray_paint=(new_color)
+    @color = new_color
+  end
+  
+  def self.vehicles_created
+    puts "There have been #{@@vehicles} vehicles created."
+  end
+  
+  def to_s
+    "You drive a #{year} #{color}, #{make} #{model}."
+  end
+end
+
+class MyCar < Vehicle
+  DOORS = 4
+end
+
+class MyTruck < Vehicle
+  DOORS = 2
+end
+  
+bobs_car = MyCar.new('Subaru', 'Forester', 1999, 'red')
+dicks_truck = MyTruck.new('Toyota', 'Tacoma', 2016, 'yellow')
+
+puts Vehicle.vehicles_created #=> There have been 2 vehicles created. 
+
+
+
+3.) Create a module that you can mix in to ONE of your subclasses that describes
+a behavior unique to that subclass.
+
+module Towable
+  def towing_capacity(name, weight)
+    puts "#{name}'s truck can tow #{weight} pounds."
+  end
+end
+
+class Vehicle # superclass
+  attr_reader :make, :model, :year, :color
+  
+  @@vehicles = 0
+  
+  def initialize(make, model, year, color)
+    @make = make
+    @model = model
+    @year = year
+    @color = color
+    @@vehicles += 1
+  end
+  
+  def spray_paint=(new_color)
+    @color = new_color
+  end
+  
+  def self.vehicles_created
+    puts "There have been #{@@vehicles} vehicles created."
+  end
+end
+
+class MyCar < Vehicle
+  DOORS = 4
+end
+
+class MyTruck < Vehicle
+  include Towable
+  
+  DOORS = 2
+end
+  
+bobs_car = MyCar.new('Subaru', 'Forester', 1999, 'red')
+  
+dicks_truck = MyTruck.new('Toyota', 'Tacoma', 2016, 'yellow')
+
+puts Vehicle.vehicles_created #=> There have been 2 vehicles created. 
+  
+
+puts dicks_truck.towing_capacity("Dick", 3400) #=> Your truck can tow 3400 pounds.
+
+
+
+4.) Print to the screen your method lookup for the classes that you have created.
+
+puts MyCar.ancestors
+puts "---------------------"
+puts MyTruck.ancestors
+puts "---------------------"
+puts Vehicle.ancestors
+
+# MyCar
+# Vehicle
+# Object
+# PP::ObjectMixin
+# Kernel
+# BasicObject
+# ---------------------
+# MyTruck
+# Towable
+# Vehicle
+# Object
+# PP::ObjectMixin
+# Kernel
+# BasicObject
+# ---------------------
+# Vehicle
+# Object
+# PP::ObjectMixin
+# Kernel
+# BasicObject
+
+
+5.) Move all of the methods from the MyCar class that also pertain to the MyTruck
+class into the Vehicle class. Make sure that all of your previous method calls 
+are working when you are finished.
+
+It looks I kind of already was doing this but I'll just add more previous methods
+that were in the code, to the Vehicle class, from what I can remember.
+
+module Towable
+  def towing_capacity(name, weight)
+    puts "#{name}'s truck can tow #{weight} pounds."
+  end
+end
+
+class Vehicle # superclass
+  attr_reader :make, :model, :year, :color
+  
+  @@vehicles = 0
+  
+  def initialize(make, model, year, color)
+    @make = make
+    @model = model
+    @year = year
+    @color = color
+    @speed = 0
+    @@vehicles += 1
+  end
+  
+  def spray_paint=(new_color)
+    @color = new_color
+  end
+  
+  def speed_up(speed)
+    @speed += speed
+    puts "You have accelerated to #{speed} mph."
+  end
+  
+  def slow_down(speed)
+    @speed += speed
+    puts "You have decelerated to #{speed} mph."
+  end
+  
+  def turn_off_engine(speed)
+    @speed = 0
+    puts "You are going #{speed} mph and are parked."
+  end
+  
+  def self.vehicles_created
+    puts "There have been #{@@vehicles} vehicles created."
+  end
+end
+
+class MyCar < Vehicle
+  DOORS = 4
+end
+
+class MyTruck < Vehicle
+  include Towable
+  
+  DOORS = 2
+end
+  
+bobs_car = MyCar.new('Subaru', 'Forester', 1999, 'red')
+  
+dicks_truck = MyTruck.new('Toyota', 'Tacoma', 2016, 'yellow')
+
+
+
+6.) Write a method called age that calls a private method to calculate the age 
+of the vehicle. Make sure the private method is not available from outside of 
+the class. You'll need to use Ruby's built-in Time class to help.
+
+module Towable
+  def towing_capacity(name, weight)
+    puts "#{name}'s truck can tow #{weight} pounds."
+  end
+end
+
+class Vehicle # superclass
+  attr_reader :make, :model, :year, :color
+  
+  @@vehicles = 0
+  
+  def initialize(make, model, year, color)
+    @make = make
+    @model = model
+    @year = year
+    @color = color
+    @speed = 0
+    @@vehicles += 1
+  end
+  
+  def spray_paint=(new_color)
+    @color = new_color
+  end
+  
+  def speed_up(speed)
+    @speed += speed
+    puts "You have accelerated to #{speed} mph."
+  end
+  
+  def slow_down(speed)
+    @speed += speed
+    puts "You have decelerated to #{speed} mph."
+  end
+  
+  def turn_off_engine(speed)
+    @speed = 0
+    puts "You are going #{speed} mph and are parked."
+  end
+  
+  def self.vehicles_created
+    puts "There have been #{@@vehicles} vehicles created."
+  end
+  
+  private
+  
+  def age
+    puts "Your vehicle is #{Time.new.year - @year} years old."
+  end
+end
+
+class MyCar < Vehicle
+  DOORS = 4
+end
+
+class MyTruck < Vehicle
+  include Towable
+  
+  DOORS = 2
+end
+  
+bobs_car = MyCar.new('Subaru', 'Forester', 1999, 'red') 
+dicks_truck = MyTruck.new('Toyota', 'Tacoma', 2016, 'yellow')
+
+bobs_car.age #=> Your vehicle is 22 years old.
+dicks_truck.age #=> Your vehicle is 5 years old. 
+
+
+
+7.) Create a class 'Student' with attributes name and grade. Do NOT make the 
+grade getter public, so joe.grade will raise an error. Create a better_grade_than? 
+method, that you can call like so...
+
+
+class Student
+  attr_reader :name
+  
+  def initialize(name, grade)
+    @name = name
+    @grade = grade
+  end
+  
+  def better_grade_than?(other_student)
+    grade > other_student.grade
+  end
+
+  protected
+    
+  def grade
+    @grade
+  end
+end
+
+bob = Student.new('Bob', 78)
+joe = Student.new('Joe', 96)
+
+puts "Well done!" if joe.better_grade_than?(bob)
+# => "Well done!"
+
+
+
+8.) Given the following code...
+
+bob = Person.new
+bob.hi
+
+And the corresponding error message...
+
+NoMethodError: private method `hi' called for #<Person:0x007ff61dbb79f0>
+from (irb):8
+from /usr/local/rvm/rubies/ruby-2.0.0-rc2/bin/irb:16:in `<main>'
+
+What is the problem and how would you go about fixing it?
+
+The problem is that an instance method called `#hi` is being invoked on
+the object bob but this does't happen becase `#hi` is coded as a private
+message.
+
+class Student
+  private
+  
+  def hi
+    puts "Hi!"
+  end
+end
+
+bob = Student.new
+bob.hi #=> error message
+
+You can fix the above code by changing the keyword private to public or just
+erasing the private method.
+
