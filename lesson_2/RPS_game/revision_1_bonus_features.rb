@@ -1,4 +1,5 @@
 #### Revision 1: RPS Bonus Features ####
+require 'pry'
 
 class Move
   attr_accessor :winning_moves, :value
@@ -194,6 +195,7 @@ class RPSGame
   end
 
   def score_tracker
+    binding.pry
     if human.move > computer.move
       human.score += 1
     elsif computer.move > human.move

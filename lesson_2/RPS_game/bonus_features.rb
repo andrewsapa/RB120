@@ -1,4 +1,5 @@
 #### RPS Bonus Features ####
+require 'pry'
 
 class Move
   attr_accessor :winning_moves, :losing_moves, :value
@@ -100,7 +101,7 @@ class Human < Player
     loop do
       puts "Please choose (r)ock, (p)aper, (s)cissors, (l)izard, or (sp)ock:"
       choice = gets.chomp.downcase
-      Move::ABBR.keys.include?(choice) ?  choice = Move::ABBR[choice] : choice
+      Move::ABBR.keys.include?(choice) ? choice = Move::ABBR[choice] : choice
       break if Move::VALUES.include?(choice)
       puts "Sorry, invalid choice."
     end
@@ -192,7 +193,7 @@ class RPSGame
 
   def display_welcome_message
     print_in_box("Welcome to Rock, Paper, Scissors, Lizard, Spock!")
-    print_in_box("First person to win 10 rounds wins the match.")
+    print_in_box("First person to win #{MATCH_WINS} rounds wins the match.")
   end
 
   def display_goodbye_message
@@ -266,7 +267,7 @@ class RPSGame
     end
 
     return false if answer.downcase == 'n'
-    return true if answer == 'y'
+    return true if answer.downcase == 'y'
   end
 
   # rubocop:disable Metrics/MethodLength
