@@ -151,16 +151,24 @@ class Human < Player
     @marker = set_marker
   end
 
+  def valid_name?(n)
+    n.empty? || n == " "
+  end
+
   def set_human_name
     n = ""
     loop do
       puts "What's your name?"
       n = gets.chomp
-      break unless n.empty?
+      break unless valid_name?(n)
       puts "Sorry, must enter a value."
     end
     self.name = n
     system('clear')
+  end
+
+  def valid_marker?(input)
+    input.size == 1 && input != 'O' && input != " "
   end
 
   def set_marker
@@ -169,7 +177,7 @@ class Human < Player
       puts "Please pick a game marker."
       puts "You can pick any game marker (NOT 'O') up to one character length."
       input = gets.chomp.to_s.upcase
-      break if input.size == 1 && input != 'O'
+      break if valid_marker?(input)
       puts "Sorry, invalid game marker."
     end
     input
@@ -342,16 +350,20 @@ class TTTGame
     end
   end
 
+  def integer?(square)
+    square.to_i.to_s == square
+  end
+
   def human_moves
     puts "Choose a square (#{joinor(board.unmarked_keys)}): "
     square = nil
     loop do
-      square = gets.chomp.to_i
-      break if board.unmarked_keys.include?(square)
+      square = gets.chomp
+      break if board.unmarked_keys.include?(square.to_i) && integer?(square)
       puts "Sorry, that's not a valid choice."
     end
 
-    board[square] = human.marker
+    board[square.to_i] = human.marker
   end
 
   # rubocop:disable Metrics/AbcSize
